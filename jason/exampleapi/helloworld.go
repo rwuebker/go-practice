@@ -19,7 +19,7 @@ func serveRest(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	fmt.Fprintf(w, string(response))
+	fmt.Fprintf(w, "hello, %s!\n", string(response))
 }
 
 /*func helloWorld(w http.ResponseWriter, r *http.Request) {
