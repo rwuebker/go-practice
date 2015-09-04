@@ -1,13 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"testing"
 	"strings"
-	"encoding/json"
+	"testing"
 )
-
 
 func TestOurFunc(t *testing.T) {
 	expected := "whats up"
@@ -23,7 +22,7 @@ func TestHelloworld(t *testing.T) {
 	person := `{"FirstName":"Jack", "LastName":"Black"}`
 
 	usersUrl := "http://localhost:8080/helloWorld"
-	
+
 	reader := strings.NewReader(person)
 
 	request, err := http.NewRequest("POST", usersUrl, reader)
@@ -41,5 +40,18 @@ func TestHelloworld(t *testing.T) {
 		t.Error("Bad Request expected: %d", res.StatusCode)
 	} else {
 		fmt.Printf("this is response: %+v\n", res.Body)
+	}
+
+	decoder := json.NewDecoder(res.Body)
+	defer r.Body.Close()
+
+	u := new(Person)
+	if err := decoder.Decode(u); err != nil {
+		t.Errorf("error occurred %s", err)
+	}
+
+	if u.FirstName != "Jack" {
+		t.Errorf("expected Jack, got %s", u.FirstName)
+		fmt.Printf("%s - %d ", u.FirstName, 10)
 	}
 }
